@@ -25,4 +25,4 @@ Die App speichert keine Namen und keine Ergebnisse. Das Ergebnis wird nur direkt
 
 Die Datei `index.html` im Browser öffnen.
 
-Für GitHub Pages den ganzen Ordner mit `index.html`, `style.css` und `script.js` hochladen.
+Für GitHub Pages den ganzen Ordner mit `index.html`, `style.css`, `script.js`, `.nojekyll` und `assets/` hochladen.
