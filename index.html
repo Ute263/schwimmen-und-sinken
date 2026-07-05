@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mina und Toni forschen: Schwimmen und Sinken</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="start-screen" class="screen is-active" aria-labelledby="start-title">
+        <div class="character-row" aria-hidden="true">
+          <div class="photo-character mina-photo" title="Mina">
+            <img src="assets/mina.png" alt="">
+            <span>Mina</span>
+          </div>
+          <div class="water-badge">💧 🚢 💧</div>
+          <div class="photo-character toni-photo" title="Toni der Igel">
+            <img src="assets/toni.png" alt="">
+            <span>Toni</span>
+          </div>
+        </div>
+
+        <p class="eyebrow">Mina und Toni forschen</p>
+        <h1 id="start-title">Schwimmen und Sinken</h1>
+        <p class="lead">Hilf Toni herauszufinden, warum Schiffe schwimmen.</p>
+        <img class="hero-image" src="assets/mina-toni-schwimmen-sinken.png" alt="Mina und Toni forschen mit Wasser, Booten und Gegenständen.">
+
+        <div class="button-row">
+          <button class="primary-button" type="button" data-action="start-quiz">Quiz starten</button>
+          <button class="soft-button" type="button" data-action="show-knowledge">Forscherwissen ansehen</button>
+        </div>
+      </section>
+
+      <section id="knowledge-screen" class="screen" aria-labelledby="knowledge-title">
+        <div class="screen-header">
+          <div>
+            <p class="eyebrow">Mina sagt</p>
+            <h2 id="knowledge-title">Forscherwissen</h2>
+          </div>
+        </div>
+
+        <div class="knowledge-grid">
+          <article class="knowledge-card">
+            <span class="knowledge-icon" aria-hidden="true">💧</span>
+            <h3>Wasser trägt</h3>
+            <p>Wasser drückt von unten nach oben. Dieser Druck heißt Auftrieb.</p>
+          </article>
+          <article class="knowledge-card">
+            <span class="knowledge-icon" aria-hidden="true">🧱</span>
+            <h3>Die Form ist wichtig</h3>
+            <p>Eine Kugel aus Knete sinkt oft. Eine Knete-Schale kann schwimmen.</p>
+          </article>
+          <article class="knowledge-card">
+            <span class="knowledge-icon" aria-hidden="true">🛶</span>
+            <h3>Luft hilft</h3>
+            <p>In einem Boot ist viel Luft. Luft hilft beim Schwimmen.</p>
+          </article>
+          <article class="knowledge-card">
+            <span class="knowledge-icon" aria-hidden="true">🚢</span>
+            <h3>Wasser im Boot</h3>
+            <p>Wenn Wasser in ein Boot läuft, wird es schwerer und kann sinken.</p>
+          </article>
+        </div>
+
+        <div class="button-row">
+          <button class="primary-button" type="button" data-action="start-quiz">Zum Quiz</button>
+          <button class="soft-button" type="button" data-action="show-start">Zur Startseite</button>
+        </div>
+      </section>
+
+      <section id="quiz-screen" class="screen" aria-labelledby="question-title">
+        <div class="quiz-topline">
+          <div class="progress-wrap" aria-label="Quizfortschritt">
+            <span id="progress-text">Frage 1 von 12</span>
+            <div class="progress-bar">
+              <div id="progress-fill"></div>
+            </div>
+          </div>
+          <div id="points-pill" class="points-pill" aria-live="polite">⭐ 0</div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="question-header">
+            <div class="mini-photo-character" aria-hidden="true">
+              <img src="assets/mina.png" alt="">
+            </div>
+            <div>
+              <p class="eyebrow">Mina fragt</p>
+              <h2 id="question-title"></h2>
+            </div>
+          </div>
+
+          <button id="speak-button" class="speak-button" type="button">🔊 Vorlesen</button>
+
+          <div id="answer-area" class="answer-area"></div>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen" aria-labelledby="result-title">
+        <div class="result-card">
+          <div class="water-badge large" aria-hidden="true">⭐ 🚢 ⭐</div>
+          <p class="eyebrow">Geschafft</p>
+          <h2 id="result-title">Deine Forscherpunkte</h2>
+          <p id="score-line" class="score-line"></p>
+          <p id="score-feedback" class="lead"></p>
+
+          <div class="button-row">
+            <button class="primary-button" type="button" data-action="restart-quiz">Noch einmal spielen</button>
+            <button class="soft-button" type="button" data-action="show-knowledge">Forscherwissen ansehen</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="feedback-window" class="feedback-window" role="dialog" aria-modal="true" aria-labelledby="feedback-title" hidden>
+      <div id="feedback-box" class="feedback-box" aria-live="polite">
+        <div id="feedback-face" class="feedback-face" aria-hidden="true"></div>
+        <div class="feedback-copy">
+          <strong id="feedback-title"></strong>
+          <span id="feedback-text"></span>
+        </div>
+        <button id="next-button" class="primary-button next-button" type="button">Weiter</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
