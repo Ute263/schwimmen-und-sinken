@@ -104,13 +104,13 @@ const questions = [
     question: "Was passt zusammen?",
     icon: "🔗",
     pairs: [
-      { left: "Stein", right: "sinkt meistens", icon: "🪨" },
-      { left: "Korken", right: "schwimmt meistens", icon: "🟤" },
-      { left: "Boot mit Loch", right: "kann sinken", icon: "🕳️" },
-      { left: "breites Boot mit Rand", right: "trägt besser", icon: "🛶" }
+      { left: "Stein", right: "geht nach unten", icon: "🪨" },
+      { left: "Korken", right: "bleibt oben", icon: "🟤" },
+      { left: "Boot mit Loch", right: "Wasser läuft hinein", icon: "💧" },
+      { left: "breites Boot mit Rand", right: "trägt viele Steine", icon: "🛶" }
     ],
     correctFeedback: "Prima zugeordnet!",
-    wrongFeedback: "Schau noch einmal: Was bleibt oben? Was geht unter?"
+    wrongFeedback: "Schau noch einmal: Was bleibt oben? Wo läuft Wasser hinein?"
   },
   {
     type: "choice",
@@ -124,9 +124,69 @@ const questions = [
   }
 ];
 
+const sortItems = [
+  {
+    name: "Stein",
+    icon: "🪨",
+    answer: "sinks",
+    correctFeedback: "Richtig. Ein Stein geht nach unten.",
+    wrongFeedback: "Denk noch einmal: Ein Stein ist schwer und sinkt meistens."
+  },
+  {
+    name: "Korken",
+    icon: "🟤",
+    answer: "swims",
+    correctFeedback: "Genau. Ein Korken bleibt oben.",
+    wrongFeedback: "Fast. Ein Korken schwimmt meistens."
+  },
+  {
+    name: "Blatt",
+    icon: "🍃",
+    answer: "swims",
+    correctFeedback: "Ja. Ein Blatt bleibt oft oben.",
+    wrongFeedback: "Schau genau: Ein Blatt schwimmt meistens."
+  },
+  {
+    name: "Münze",
+    icon: "🪙",
+    answer: "sinks",
+    correctFeedback: "Richtig. Eine Münze sinkt meistens.",
+    wrongFeedback: "Eine Münze ist schwer für ihre Größe. Sie sinkt meistens."
+  },
+  {
+    name: "Knete-Kugel",
+    icon: "clay-ball",
+    answer: "sinks",
+    correctFeedback: "Genau. Die Kugel sinkt oft.",
+    wrongFeedback: "Die Knete-Kugel geht meistens nach unten."
+  },
+  {
+    name: "Knete-Schale",
+    icon: "clay-bowl",
+    answer: "swims",
+    correctFeedback: "Super. Die Schale kann schwimmen.",
+    wrongFeedback: "Die Schalenform hilft. Sie kann schwimmen."
+  },
+  {
+    name: "Boot mit Luft",
+    icon: "🛶",
+    answer: "swims",
+    correctFeedback: "Richtig. Luft hilft beim Schwimmen.",
+    wrongFeedback: "In einem Boot ist Luft. Das hilft beim Schwimmen."
+  },
+  {
+    name: "Boot voll Wasser",
+    icon: "💦",
+    answer: "sinks",
+    correctFeedback: "Genau. Wasser macht das Boot schwerer.",
+    wrongFeedback: "Wenn viel Wasser im Boot ist, kann es sinken."
+  }
+];
+
 const screens = {
   start: document.querySelector("#start-screen"),
   knowledge: document.querySelector("#knowledge-screen"),
+  sort: document.querySelector("#sort-screen"),
   quiz: document.querySelector("#quiz-screen"),
   result: document.querySelector("#result-screen")
 };
@@ -145,6 +205,18 @@ const progressFill = document.querySelector("#progress-fill");
 const pointsPill = document.querySelector("#points-pill");
 const scoreLine = document.querySelector("#score-line");
 const scoreFeedback = document.querySelector("#score-feedback");
+const sortProgressText = document.querySelector("#sort-progress-text");
+const sortProgressFill = document.querySelector("#sort-progress-fill");
+const sortPointsPill = document.querySelector("#sort-points-pill");
+const sortObjectCard = document.querySelector("#sort-object-card");
+const sortChoices = document.querySelector("#sort-choices");
+const sortItemIcon = document.querySelector("#sort-item-icon");
+const sortItemName = document.querySelector("#sort-item-name");
+const sortFeedback = document.querySelector("#sort-feedback");
+const sortNextButton = document.querySelector("#sort-next-button");
+const sortPlayArea = document.querySelector("#sort-play-area");
+const sortDoneCard = document.querySelector("#sort-done-card");
+const sortDoneText = document.querySelector("#sort-done-text");
 
 let currentQuestionIndex = 0;
 let score = 0;
@@ -153,6 +225,9 @@ let orderSelection = [];
 let activeMatchLeft = null;
 let matchAnswers = {};
 let retryCurrentQuestion = false;
+let sortIndex = 0;
+let sortScore = 0;
+let sortAnswered = false;
 
 document.addEventListener("click", (event) => {
   const action = event.target.dataset.action;
@@ -164,14 +239,27 @@ document.addEventListener("click", (event) => {
     startQuiz();
   }
 
+  if (action === "start-sort-game") {
+    startSortGame();
+  }
+
   if (action === "show-knowledge") {
     stopReading();
+    closeFeedbackWindow();
     showScreen("knowledge");
   }
 
   if (action === "show-start") {
     stopReading();
+    closeFeedbackWindow();
     showScreen("start");
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const sortAnswer = event.target.dataset.sortAnswer;
+  if (sortAnswer) {
+    checkSortAnswer(sortAnswer);
   }
 });
 
@@ -197,6 +285,11 @@ speakButton.addEventListener("click", () => {
   readCurrentQuestion();
 });
 
+sortNextButton.addEventListener("click", () => {
+  sortIndex += 1;
+  renderSortItem();
+});
+
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove("is-active"));
   screens[name].classList.add("is-active");
@@ -210,6 +303,88 @@ function startQuiz() {
   retryCurrentQuestion = false;
   showScreen("quiz");
   renderQuestion();
+}
+
+function startSortGame() {
+  stopReading();
+  closeFeedbackWindow();
+  sortIndex = 0;
+  sortScore = 0;
+  showScreen("sort");
+  renderSortItem();
+}
+
+function renderSortItem() {
+  sortAnswered = false;
+  sortFeedback.hidden = true;
+  sortFeedback.className = "sort-feedback";
+  sortNextButton.hidden = true;
+  sortObjectCard.hidden = false;
+  sortChoices.hidden = false;
+  sortDoneCard.hidden = true;
+
+  if (sortIndex >= sortItems.length) {
+    renderSortDone();
+    return;
+  }
+
+  const item = sortItems[sortIndex];
+  sortProgressText.textContent = `Karte ${sortIndex + 1} von ${sortItems.length}`;
+  sortProgressFill.style.width = `${((sortIndex + 1) / sortItems.length) * 100}%`;
+  sortPointsPill.textContent = `⭐ ${sortScore}`;
+  sortItemIcon.innerHTML = getSortVisual(item.icon);
+  sortItemName.textContent = item.name;
+  sortPlayArea.querySelectorAll(".sort-choice").forEach((button) => {
+    button.disabled = false;
+    button.classList.remove("is-correct", "is-wrong");
+  });
+}
+
+function checkSortAnswer(answer) {
+  if (sortAnswered || sortIndex >= sortItems.length) {
+    return;
+  }
+
+  const item = sortItems[sortIndex];
+  const isCorrect = answer === item.answer;
+  const selectedButton = document.querySelector(`[data-sort-answer="${answer}"]`);
+  selectedButton.classList.add(isCorrect ? "is-correct" : "is-wrong");
+
+  sortFeedback.hidden = false;
+  sortFeedback.className = `sort-feedback ${isCorrect ? "correct" : "wrong"}`;
+  sortFeedback.textContent = `${isCorrect ? "😊" : "☹️"} ${isCorrect ? item.correctFeedback : item.wrongFeedback}`;
+
+  if (!isCorrect) {
+    return;
+  }
+
+  sortAnswered = true;
+  sortScore += 1;
+  sortPointsPill.textContent = `⭐ ${sortScore}`;
+  sortPlayArea.querySelectorAll(".sort-choice").forEach((button) => {
+    button.disabled = true;
+  });
+  sortNextButton.hidden = false;
+}
+
+function renderSortDone() {
+  sortProgressText.textContent = `Karte ${sortItems.length} von ${sortItems.length}`;
+  sortProgressFill.style.width = "100%";
+  sortPointsPill.textContent = `⭐ ${sortScore}`;
+  sortObjectCard.hidden = true;
+  sortChoices.hidden = true;
+  sortFeedback.hidden = true;
+  sortNextButton.hidden = true;
+  sortDoneText.textContent = `Du hast ${sortScore} Forscherkarten geschafft.`;
+  sortDoneCard.hidden = false;
+}
+
+function getSortVisual(icon) {
+  if (icon.startsWith("clay-")) {
+    return `<span class="clay-shape ${icon}"></span>`;
+  }
+
+  return icon;
 }
 
 function renderQuestion() {

@@ -9,6 +9,8 @@ Die Kinder wiederholen spielerisch:
 - Warum sind Form, Luft und Auftrieb wichtig?
 - Warum können große Schiffe schwimmen?
 
+Zusätzlich gibt es ein kurzes Sortierspiel: Die Kinder entscheiden, ob ein Gegenstand schwimmt oder sinkt.
+
 ## GitHub Pages
 
 Statische Web-App, geeignet für GitHub Pages.

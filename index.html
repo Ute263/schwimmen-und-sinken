@@ -28,6 +28,7 @@
 
         <div class="button-row">
           <button class="primary-button" type="button" data-action="start-quiz">Quiz starten</button>
+          <button class="soft-button" type="button" data-action="start-sort-game">Sortierspiel</button>
           <button class="soft-button" type="button" data-action="show-knowledge">Forscherwissen ansehen</button>
         </div>
       </section>
@@ -65,7 +66,56 @@
 
         <div class="button-row">
           <button class="primary-button" type="button" data-action="start-quiz">Zum Quiz</button>
+          <button class="soft-button" type="button" data-action="start-sort-game">Sortierspiel</button>
           <button class="soft-button" type="button" data-action="show-start">Zur Startseite</button>
+        </div>
+      </section>
+
+      <section id="sort-screen" class="screen" aria-labelledby="sort-title">
+        <div class="quiz-topline">
+          <div class="progress-wrap" aria-label="Sortierspiel-Fortschritt">
+            <span id="sort-progress-text">Karte 1 von 8</span>
+            <div class="progress-bar">
+              <div id="sort-progress-fill"></div>
+            </div>
+          </div>
+          <div id="sort-points-pill" class="points-pill" aria-live="polite">⭐ 0</div>
+        </div>
+
+        <div class="sort-game-card">
+          <div class="question-header">
+            <div class="mini-photo-character" aria-hidden="true">
+              <img src="assets/mina.png" alt="">
+            </div>
+            <div>
+              <p class="eyebrow">Mina fragt</p>
+              <h2 id="sort-title">Schwimmt oder sinkt?</h2>
+            </div>
+          </div>
+
+          <div id="sort-play-area" class="sort-play-area">
+            <div id="sort-object-card" class="sort-object-card" aria-live="polite">
+              <span id="sort-item-icon" class="sort-item-icon" aria-hidden="true">🪨</span>
+              <strong id="sort-item-name">Stein</strong>
+            </div>
+
+            <div id="sort-choices" class="sort-choices" aria-label="Antwort wählen">
+              <button class="sort-choice swim-choice" type="button" data-sort-answer="swims">💧 Schwimmt</button>
+              <button class="sort-choice sink-choice" type="button" data-sort-answer="sinks">⬇️ Sinkt</button>
+            </div>
+
+            <div id="sort-feedback" class="sort-feedback" aria-live="polite" hidden></div>
+            <button id="sort-next-button" class="primary-button next-button" type="button" hidden>Nächste Karte</button>
+            <div id="sort-done-card" class="sort-done-card" hidden>
+              <span aria-hidden="true">⭐</span>
+              <strong>Alles sortiert!</strong>
+              <p id="sort-done-text">Du hast alle Forscherkarten geschafft.</p>
+              <div class="button-row">
+                <button class="primary-button" type="button" data-action="start-sort-game">Noch einmal sortieren</button>
+                <button class="soft-button" type="button" data-action="start-quiz">Zum Quiz</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -107,6 +157,7 @@
 
           <div class="button-row">
             <button class="primary-button" type="button" data-action="restart-quiz">Noch einmal spielen</button>
+            <button class="soft-button" type="button" data-action="start-sort-game">Sortierspiel</button>
             <button class="soft-button" type="button" data-action="show-knowledge">Forscherwissen ansehen</button>
           </div>
         </div>
